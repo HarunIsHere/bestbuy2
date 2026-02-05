@@ -42,7 +42,10 @@ def make_order(store_obj):
             continue
 
         product = active_products[choice_num - 1]
-        if amount > product.get_quantity():
+
+        # Prevent over-ordering the same product across multiple entries
+        already = sum(qty for p, qty in shopping_list if p is product)
+        if already + amount > product.get_quantity():
             print("Error adding product!\n")
             continue
 
@@ -52,7 +55,12 @@ def make_order(store_obj):
     if not shopping_list:
         return
 
-    total_price = store_obj.order(shopping_list)
+    try:  # pylint: disable=broad-except
+        total_price = store_obj.order(shopping_list)
+    except Exception:
+        print("Error making order!\n")
+        return
+
     total_price_int = int(total_price) if total_price == int(total_price) else total_price
     print(f"Order made! Total payment: ${total_price_int}\n")
 
@@ -96,4 +104,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
