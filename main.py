@@ -3,15 +3,18 @@ import store
 
 
 def list_products(store_obj):
+    """Print and return all active products in the store."""
     active_products = store_obj.get_all_products()
     print("------")
     for i, prod in enumerate(active_products, start=1):
-        print(f"{i}. {prod.name}, Price: ${int(prod.price) if prod.price == int(prod.price) else prod.price}, Quantity: {prod.get_quantity()}")
+        price = int(prod.price) if prod.price == int(prod.price) else prod.price
+        print(f"{i}. {prod.name}, Price: ${price}, Quantity: {prod.get_quantity()}")
     print("------")
     return active_products
 
 
 def make_order(store_obj):
+    """Interactively collect an order from the user and execute it."""
     active_products = list_products(store_obj)
 
     shopping_list = []
@@ -30,22 +33,21 @@ def make_order(store_obj):
         try:
             choice_num = int(choice)
             amount = int(amount_str)
-
-            if choice_num < 1 or choice_num > len(active_products):
-                raise Exception()
-            if amount <= 0:
-                raise Exception()
-
-            product = active_products[choice_num - 1]
-
-            if amount > product.get_quantity():
-                raise Exception()
-
-            shopping_list.append((product, amount))
-            print("Product added to list!\n")
-
-        except Exception:
+        except ValueError:
             print("Error adding product!\n")
+            continue
+
+        if choice_num < 1 or choice_num > len(active_products) or amount <= 0:
+            print("Error adding product!\n")
+            continue
+
+        product = active_products[choice_num - 1]
+        if amount > product.get_quantity():
+            print("Error adding product!\n")
+            continue
+
+        shopping_list.append((product, amount))
+        print("Product added to list!\n")
 
     if not shopping_list:
         return
@@ -56,15 +58,18 @@ def make_order(store_obj):
 
 
 def start(store_obj):
+    """Run the main store menu loop."""
     while True:
-        print("""
+        print(
+            """
    Store Menu
    ----------
 1. List all products in store
 2. Show total amount in store
 3. Make an order
 4. Quit
-""".rstrip())
+""".rstrip()
+        )
 
         choice = input("Please choose a number: ")
 
@@ -79,14 +84,13 @@ def start(store_obj):
 
 
 def main():
-    # setup initial stock of inventory
+    """Create default inventory and start the user interface."""
     product_list = [
         products.Product("MacBook Air M2", price=1450, quantity=100),
         products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
         products.Product("Google Pixel 7", price=500, quantity=250),
     ]
     best_buy = store.Store(product_list)
-
     start(best_buy)
 
 
