@@ -61,3 +61,45 @@ class Product:
         total_price = self.price * quantity
         self.set_quantity(self.quantity - quantity)
         return total_price
+class NonStockedProduct(Product):
+    """A product that has no stock limit (e.g., software license)."""
+
+    def __init__(self, name, price):
+        super().__init__(name, price, quantity=0)
+        self.activate()  # must stay purchasable
+
+    def set_quantity(self, quantity):
+        """Quantity is always 0 for non-stocked products."""
+        self.quantity = 0
+        self.activate()
+
+    def buy(self, quantity):
+        """Buy without affecting quantity."""
+        if quantity <= 0:
+            raise Exception("Buy quantity must be greater than 0")
+        if not self.is_active():
+            raise Exception("Cannot buy an inactive product")
+        return self.price * quantity
+
+    def show(self):
+        """Print a string representation of the product."""
+        print(f"{self.name}, Price: {self.price}, Quantity: Unlimited")
+
+class LimitedProduct(Product):
+    """A product that can only be bought up to 'maximum' times per order."""
+
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        if maximum < 1:
+            raise Exception("Maximum must be at least 1")
+        self.maximum = maximum
+
+    def buy(self, quantity):
+        """Buy a quantity up to the per-order maximum."""
+        if quantity > self.maximum:
+            raise Exception("Quantity exceeds maximum allowed per order")
+        return super().buy(quantity)
+
+    def show(self):
+        """Print a string representation of the product."""
+        print(f"{self.name}, Price: {self.price}, Limited to {self.maximum} per order!")
