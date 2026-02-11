@@ -1,6 +1,6 @@
 import products
-import store
 import promotions
+import store
 
 
 def list_products(store_obj):
@@ -59,13 +59,17 @@ def make_order(store_obj):
     if not shopping_list:
         return
 
-    try:  # pylint: disable=broad-except
+    try:
         total_price = store_obj.order(shopping_list)
-    except Exception:
-        print("Error making order!\n")
+    except Exception as e:
+        print(f"Error making order: {e}\n")
         return
 
-    total_price_int = int(total_price) if total_price == int(total_price) else total_price
+    if total_price == int(total_price):
+        total_price_int = int(total_price)
+    else:
+        total_price_int = total_price
+
     print(f"Order made! Total payment: ${total_price_int}\n")
 
 

@@ -1,5 +1,5 @@
 class Product:
-    """Represents a product available in the store."""
+    """A product available in the store."""
 
     def __init__(self, name, price, quantity):
         """Create a new Product."""
@@ -55,8 +55,12 @@ class Product:
         self.promotion = promotion
 
     def __str__(self):
+        """Return a string representation of the product."""
         promo_name = self.promotion.name if self.promotion else "None"
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Promotion: {promo_name}"
+        return (
+            f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, "
+            f"Promotion: {promo_name}"
+        )
 
     def show(self):
         """Print a string representation of the product."""
@@ -65,11 +69,11 @@ class Product:
     def buy(self, quantity):
         """Buy a quantity and return total price."""
         if quantity <= 0:
-            raise Exception("Buy quantity must be greater than 0")
+            raise Exception("Buying quantity must be greater than 0")
         if not self.is_active():
             raise Exception("Cannot buy an inactive product")
         if quantity > self.quantity:
-            raise Exception("Not enough quantity in stock")
+            raise Exception("There is not enough in stock")
 
         if self.promotion:
             total_price = self.promotion.apply_promotion(self, quantity)
@@ -81,9 +85,10 @@ class Product:
 
 
 class NonStockedProduct(Product):
-    """A product that has no stock limit (e.g., software license)."""
+    """A product that has no stock limit (e.g., Software)."""
 
     def __init__(self, name, price):
+        """Create a non-stocked product with unlimited quantity."""
         super().__init__(name, price, quantity=0)
         self.activate()
 
@@ -93,11 +98,19 @@ class NonStockedProduct(Product):
         self.activate()
 
     def __str__(self):
+        """Return a string representation of the non-stocked product."""
         promo_name = self.promotion.name if self.promotion else "None"
-        return f"{self.name}, Price: {self.price}, Quantity: Unlimited, Promotion: {promo_name}"
+        return (
+            f"{self.name}, Price: {self.price}, Quantity: Unlimited, "
+            f"Promotion: {promo_name}"
+        )
+
+    def show(self):
+        """Print a string representation including unlimited quantity."""
+        print(str(self))
 
     def buy(self, quantity):
-        """Buy without affecting quantity."""
+        """Buy without an effect on quantity."""
         if quantity <= 0:
             raise Exception("Buy quantity must be greater than 0")
         if not self.is_active():
@@ -112,6 +125,7 @@ class LimitedProduct(Product):
     """A product that can only be bought up to 'maximum' times per order."""
 
     def __init__(self, name, price, quantity, maximum):
+        """Create a limited product with a per-order maximum."""
         super().__init__(name, price, quantity)
         if maximum < 1:
             raise Exception("Maximum must be at least 1")
@@ -124,5 +138,13 @@ class LimitedProduct(Product):
         return super().buy(quantity)
 
     def __str__(self):
+        """Return a string representation including the per-order maximum."""
         promo_name = self.promotion.name if self.promotion else "None"
-        return f"{self.name}, Price: {self.price}, Limited to {self.maximum} per order!, Promotion: {promo_name}"
+        return (
+            f"{self.name}, Price: {self.price}, Limited to {self.maximum} per order!, "
+            f"Promotion: {promo_name}"
+        )
+
+    def show(self):
+        """Print a string representation including the per-order maximum."""
+        print(str(self))

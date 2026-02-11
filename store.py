@@ -22,7 +22,7 @@ class Store:
         return [p for p in self.products if p.is_active()]
 
     def order(self, shopping_list):
-        """Buy products from a list of (Product, quantity) and return total."""
+        """Buy products from a list of Product, quantity and return total."""
         total_price = 0.0
         for product, quantity in shopping_list:
             if product not in self.products:
