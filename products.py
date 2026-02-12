@@ -141,8 +141,8 @@ class LimitedProduct(Product):
         """Return a string representation including the per-order maximum."""
         promo_name = self.promotion.name if self.promotion else "None"
         return (
-            f"{self.name}, Price: {self.price}, Limited to {self.maximum} per order!, "
-            f"Promotion: {promo_name}"
+            f"{self.name}, Price: {self.price}, "
+            f"Limited to {self.maximum} per order!, Promotion: {promo_name}"
         )
 
     def show(self):

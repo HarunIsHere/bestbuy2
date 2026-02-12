@@ -92,7 +92,7 @@ def start(store_obj):
         if choice == "1":
             list_products(store_obj)
         elif choice == "2":
-            print(f"Total of {store_obj.get_total_quantity()} items in store\n")
+            print(f"Total: {store_obj.get_total_quantity()} items in store\n")
         elif choice == "3":
             make_order(store_obj)
         elif choice == "4":
